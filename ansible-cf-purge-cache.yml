@@ -34,4 +34,4 @@
         register: cf_purge
 
       - name: Print result of purging zone {{cloudflare_purge_zone}}
-        debug: var=cf_purge.json.success
+        debug: var=cf_purge.json.success verbosity=1
