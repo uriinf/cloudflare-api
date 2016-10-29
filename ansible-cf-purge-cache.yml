@@ -1,0 +1,37 @@
+---
+  - hosts: localhost
+    connection: local
+    gather_facts: false
+    vars:
+      cloudflare_purge_email: "youremail@example.com"
+      cloudflare_purge_key: "yourcloudflareauthkey"
+      cloudflare_purge_zone: "yourcloudflaredomain"
+      cloudflare_purge_body:
+        purge_everything: true
+
+    tasks:
+      - name: List CF zones
+        uri:
+          url: 'https://api.cloudflare.com/client/v4/zones?name={{ cloudflare_purge_zone }}'
+          method: 'GET'
+          HEADER_Content-Type: "application/json"
+          HEADER_X-Auth-Email: '{{cloudflare_purge_email}}'
+          HEADER_X-Auth-Key: '{{cloudflare_purge_key}}'
+          return_content: yes
+        register: cf_zones
+
+      - name: Purge CF {{cloudflare_purge_zone}} cache
+        uri:
+          url: 'https://api.cloudflare.com/client/v4/zones/{{ cf_zones.json.result[0].id }}/purge_cache'
+          method: 'DELETE'
+          body: '{{ cloudflare_purge_body | to_json }}'
+          body_format: json
+          HEADER_Content-Type: "application/json"
+          HEADER_X-Auth-Email: '{{cloudflare_purge_email}}'
+          HEADER_X-Auth-Key: '{{cloudflare_purge_key}}'
+          return_content: yes
+          status_code: 200
+        register: cf_purge
+
+      - name: Print result of purging zone {{cloudflare_purge_zone}}
+        debug: var=cf_purge.json.success
