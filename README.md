@@ -1,4 +1,4 @@
-# CloudFlare purge cache scripts with API
+# CloudFlare purge cache with API
 
 ### ansible-cf-purge-cache.yml is ansible ad-hoc to purge all files in zone
 Just replace 3 variables cloudflare_purge_email, cloudflare_purge_key, cloudflare_purge_zone and run:
@@ -6,6 +6,6 @@ Just replace 3 variables cloudflare_purge_email, cloudflare_purge_key, cloudflar
 ansible-playbook ansible-cf-purge-cache.yml
 ```
 
-# Usefull links:
+# Useful links:
 https://api.cloudflare.com/  
 https://github.com/cloudflare/python-cloudflare
